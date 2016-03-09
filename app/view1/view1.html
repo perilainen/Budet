@@ -1,0 +1,119 @@
+<p>This is the partial for view 1.</p>
+
+<div class = "col-md-4" style="border: 1px solid">
+    <h2> Investeringar</h2>
+    <input type="text"  placeholder= "filter" class =  "form-control input-normal" ng-model=investeringsfilter >
+<table class= "table table-condensed">
+    <tr>
+        <th ng-click="sortType = 'id'; sortReverse = !sortReverse">ID</th>
+        <th ng-click="sortType = 'beskrivning'; sortReverse = !sortReverse">Beskrivning</th>
+        <th ng-click="sortType = 'kategori'; sortReverse = !sortReverse">Kategori</th>
+        <th ng-click="sortType = 'antal'; sortReverse = !sortReverse">Antal</th>
+        <th ng-click="sortType = 'belopp'; sortReverse = !sortReverse">Belopp</th>
+    </tr>
+    <tr ng-repeat="data in investeringar | orderBy:sortType:sortReverse | filter:investeringsfilter">
+        <td>
+            <input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.id >
+            </td>
+        <td>
+            <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.beskrivning >
+            </td>
+        <td>
+            <input type="text" ng-change="getInvesteringKategori()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=data.kategori >
+        </td>
+        <td>
+            <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=data.antal >
+            </td>
+        <td>
+            <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=data.belopp >
+            </td>
+
+    <td>
+        <button class="btn btn-danger" ng-click="RemoveInvestering(data)" >
+            Ta bort
+        </button>
+
+    </td>
+</table>
+
+
+    <button class="btn btn-danger" ng-click="addInvestering()" >
+        Lägg till
+    </button>
+{{getTotalInvestering()}}
+
+
+
+</div>
+<div class = "col-md-4" style="border: 1px solid">
+    <h1 ng-click="getInvesteringKategori()">Investeringar på kategori</h1>
+    <table class= "table table-condensed">
+
+    <tr>
+        <th>ID</th>
+        <th>Beskrivning</th>
+
+    </tr>
+    <tr ng-repeat-start="data in investeringarKategori ">
+        <td>
+            <input type="text"  ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.kategori >
+        </td>
+        <td>
+            <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.belopp >
+        </td>
+        </tr>
+            <tr ng-repeat="datain in investeringar | orderBy:sortType:sortReverse | filter:{kategori: data.kategori}:true">
+                <td>
+                    <input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=datain.id >
+                </td>
+                <td>
+                    <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=datain.beskrivning >
+                </td>
+                <td>
+                    <input type="text" ng-change="getInvesteringKategori()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=datain.kategori >
+                </td>
+                <td>
+                    <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=datain.antal >
+                </td>
+                <td>
+                    <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=datain.belopp >
+                </td>
+
+    <tr ng-repeat-end=""></tr>
+
+</table>
+
+
+    </div>
+<div class = "col-md-4">
+    <table class= "table table-condensed">
+        <tr>
+            <th>Spelare</th>
+            <th>Rätt resultat</th>
+            <th>Rätt tecken</th>
+            <th>Poäng</th>
+        </tr>
+        <tr ng-repeat="data in kostnader | orderBy:'-points'">
+            <td>{{data.belopp}}</td>
+            <td>{{data.beskrivning}}</td>
+            <td>{{data.sign}}</td>
+            <td>{{data.points}}</td>
+    </table>
+</div>
+
+
+<div class = "col-md-4">
+    <table class= "table table-condensed">
+        <tr>
+            <th>Spelare</th>
+            <th>Rätt resultat</th>
+            <th>Rätt tecken</th>
+            <th>Poäng</th>
+        </tr>
+        <tr ng-repeat="data in inkomster | orderBy:'-points'">
+            <td>{{data.belopp}}</td>
+            <td>{{data.beskrivning}}</td>
+            <td>{{data.sign}}</td>
+            <td>{{data.points}}</td>
+    </table>
+</div>
