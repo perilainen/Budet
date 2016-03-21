@@ -1,119 +1,233 @@
-<p>This is the partial for view 1.</p>
 
-<div class = "col-md-4" style="border: 1px solid">
-    <h2> Investeringar</h2>
-    <input type="text"  placeholder= "filter" class =  "form-control input-normal" ng-model=investeringsfilter >
-<table class= "table table-condensed">
-    <tr>
-        <th ng-click="sortType = 'id'; sortReverse = !sortReverse">ID</th>
-        <th ng-click="sortType = 'beskrivning'; sortReverse = !sortReverse">Beskrivning</th>
-        <th ng-click="sortType = 'kategori'; sortReverse = !sortReverse">Kategori</th>
-        <th ng-click="sortType = 'antal'; sortReverse = !sortReverse">Antal</th>
-        <th ng-click="sortType = 'belopp'; sortReverse = !sortReverse">Belopp</th>
-    </tr>
-    <tr ng-repeat="data in investeringar | orderBy:sortType:sortReverse | filter:investeringsfilter">
-        <td>
-            <input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.id >
-            </td>
-        <td>
-            <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.beskrivning >
-            </td>
-        <td>
-            <input type="text" ng-change="getInvesteringKategori()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=data.kategori >
-        </td>
-        <td>
-            <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=data.antal >
-            </td>
-        <td>
-            <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=data.belopp >
-            </td>
+<div class="col-md-13">
+	<div class = "col-md-12" style="border: 1px solid">
+		<h2> Investeringar</h2>
+		<input type="text"  placeholder= "filter" class =  "form-control input-normal" ng-model=investeringsfilter >
+		<table class= "table table-condensed">
+			<tr>
+				<th class="col-md-1" ng-click="sortType = 'id'; sortReverse = !sortReverse">ID</th>
+				<th class="col-md-2" ng-click="sortType = 'beskrivning'; sortReverse = !sortReverse">Beskrivning</th>
+				<th class="col-md-2" ng-click="sortType = 'kategori'; sortReverse = !sortReverse">Kategori</th>
+				<th class="col-md-2" ng-click="sortType = 'antal'; sortReverse = !sortReverse">Antal</th>
+				<th class="col-md-3" ng-click="sortType = 'belopp'; sortReverse = !sortReverse">Belopp</th>
+                <th class="col-md-2" ng-click="sortType = 'years'; sortReverse = !sortReverse">Antal år</th>
+                
+			</tr>
+			<tr ng-repeat="data in investeringar | orderBy:sortType:sortReverse | filter:investeringsfilter">
+				<td>
+				<input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control lg-xxsm" ng-model=data.id >
+				</td>
+				<td>
+				<input type="text"  placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.beskrivning >
+				</td>
+				<td class="col-md-1">
+				<input type="text" ng-change="getInvesteringKategori(); getDataSourceInvestering()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=data.kategori >
+				</td>
+				<td class="col-md-1">
+				<input type="text" ng-change="getInvesteringKategori(); getDataSourceInvestering()"  class =  "form-control" ng-model=data.antal >
+				</td>
+                
+				<td>
+				<input type="text" ng-change="getInvesteringKategori(); getDataSourceInvestering()"  class =  "form-control" ng-model=data.belopp >
+				</td>
 
-    <td>
-        <button class="btn btn-danger" ng-click="RemoveInvestering(data)" >
-            Ta bort
-        </button>
+                <td>
+                <input type="text" ng-change="getInvesteringKategori(); getDataSourceInvestering()"  class =  "form-control" ng-model=data.years >
+                </td>
 
-    </td>
-</table>
+				<td>
+				<button class="btn btn-danger" ng-click="RemoveInvestering(data)" >
+					Ta bort
+				</button></td>
+		</table>
 
+		<button class="btn btn-success" ng-click="addInvestering()" >
+			Lägg till
+		</button>
+		Total: {{getTotalInvestering()}}
+	</div>
 
-    <button class="btn btn-danger" ng-click="addInvestering()" >
-        Lägg till
-    </button>
-{{getTotalInvestering()}}
+	<div class = "col-md-4" style="border: 1px solid">
+		<h2 ng-click="expandInvesteringKategori = !expandInvesteringKategori">Investeringar på kategori</h2>
+		<table class= "table table-condensed">
+			<tr>
+				<th>ID</th>
+				<th>Beskrivning</th>
+			</tr>
+			<tr ng-repeat-start="data in investeringarKategori ">
+				<td>
+				<input type="text"  ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.kategori >
+				</td>
+				<td>
+				<input type="text"   ng-disabled="true" placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.belopp >
+				</td>
+			</tr>
+			<th ng-show="expandInvesteringKategori">Beskrivning</th>
+			<th ng-show="expandInvesteringKategori">Total Belopp</th>
+			<tr ng-show="expandInvesteringKategori" ng-repeat="datain in investeringar | orderBy:sortType:sortReverse | filter:{kategori: data.kategori}:true">
+				<td> {{datain.beskrivning}} </td>
+				<td> {{calcTotal(datain)}} </td>
+			<tr ng-repeat-end=""></tr>
+		</table>
+	</div>
+    <div class ="col-md-4">
+<canvas id="bar" class="chart chart-bar"
+chart-data="investeringvalue" chart-labels="investeringLabel" chart-series="series2"></canvas>
+    </div>
 
-
-
+    <div class ="col-md-4">
+<canvas id="bar" class="chart chart-bar"
+chart-data="investeringaryearsvalues" chart-labels="investeringaryearslabels" chart-series="series2"></canvas>
+    </div>
 </div>
-<div class = "col-md-4" style="border: 1px solid">
-    <h1 ng-click="getInvesteringKategori()">Investeringar på kategori</h1>
-    <table class= "table table-condensed">
 
-    <tr>
-        <th>ID</th>
-        <th>Beskrivning</th>
+<div class="col-md-12">
+	<div class = "col-md-7" style="border: 1px solid">
+		<h2> Kostnader</h2>
+		<input type="text"  placeholder= "filter" class =  "form-control input-normal" ng-model=utgiftfilter >
+		<table class= "table table-condensed">
+			<tr>
+				<th ng-click="sortTypeKostnad = 'id'; sortTypeKostnadReverse = !sortTypeKostnadReverse">ID</th>
+				<th ng-click="sortTypeKostnad = 'beskrivning'; sortTypeKostnadReverse = !sortTypeKostnadReverse">Beskrivning</th>
+				<th ng-click="sortTypeKostnad = 'kategori'; sortTypeKostnadReverse = !sortTypeKostnadReverse">Kategori</th>
+				<th ng-click="sortTypeKostnad = 'antal'; sortTypeKostnadReverse = !sortTypeKostnadReverse">Antal</th>
+				<th ng-click="sortTypeKostnad = 'belopp'; sortTypeKostnadReverse = !sortTypeKostnadReverse">Belopp</th>
+			</tr>
+			<tr ng-repeat="data in utgifter | orderBy:sortTypeKostnad:sortTypeKostnadReverse | filter:utgiftfilter">
+				<td>
+				<input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.id >
+				</td>
+				<td>
+				<input type="text"  placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.beskrivning >
+				</td>
+				<td>
+				<input type="text" ng-change="getKostnadKategori(); getDataSourceKostnad()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=data.kategori >
+				</td>
+				<td>
+				<input type="number" ng-change="getKostnadKategori(); getDataSourceKostnad()"  class =  "form-control" ng-model=data.antal >
+				</td>
+				<td>
+				<input type="number" ng-change="getKostnadKategori(); getDataSourceKostnad()"  class =  "form-control" ng-model=data.belopp >
+				</td>
 
-    </tr>
-    <tr ng-repeat-start="data in investeringarKategori ">
-        <td>
-            <input type="text"  ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.kategori >
-        </td>
-        <td>
-            <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.belopp >
-        </td>
-        </tr>
-            <tr ng-repeat="datain in investeringar | orderBy:sortType:sortReverse | filter:{kategori: data.kategori}:true">
+				<td>
+				<button class="btn btn-danger" ng-click="RemoveKostnad(data)" >
+					Ta bort
+				</button></td>
+			</tr>
+		</table>
+
+		<button class="btn btn-success" ng-click="addKostnad()" >
+			Lägg till
+		</button>
+        Total: {{getTotalKostnad()}}
+
+	</div>
+	<div class="col-md-3" style="border: 1px solid">
+        <h2 ng-click="expandKostnaderKategori = !expandKostnaderKategori">Kostnader på kategori</h2>
+        <table class= "table table-condensed">
+            <tr>
+                <th>ID</th>
+                <th>Beskrivning</th>
+            </tr>
+            <tr ng-repeat-start="data in kostnaderKategori ">
                 <td>
-                    <input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=datain.id >
+                <input type="text"  ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.kategori >
                 </td>
                 <td>
-                    <input type="text"   placeholder= "beskrivning" class =  "form-control input-normal" ng-model=datain.beskrivning >
+                <input type="text"   ng-disabled="true" placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.belopp >
                 </td>
-                <td>
-                    <input type="text" ng-change="getInvesteringKategori()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=datain.kategori >
-                </td>
-                <td>
-                    <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=datain.antal >
-                </td>
-                <td>
-                    <input type="number" ng-change="getInvesteringKategori()"  class =  "form-control" ng-model=datain.belopp >
-                </td>
-
-    <tr ng-repeat-end=""></tr>
-
-</table>
-
+            </tr>
+            <th ng-show="expandKostnaderKategori">Beskrivning</th>
+            <th ng-show="expandKostnaderKategori">Total Belopp</th>
+            <tr ng-show="expandKostnaderKategori" ng-repeat="datain in utgifter | orderBy:sortType:sortReverse | filter:{kategori: data.kategori}:true">
+                <td> {{datain.beskrivning}} </td>
+                <td> {{calcTotal(datain)}} </td>
+            <tr ng-repeat-end=""></tr>
+        </table>
 
     </div>
-<div class = "col-md-4">
-    <table class= "table table-condensed">
-        <tr>
-            <th>Spelare</th>
-            <th>Rätt resultat</th>
-            <th>Rätt tecken</th>
-            <th>Poäng</th>
-        </tr>
-        <tr ng-repeat="data in kostnader | orderBy:'-points'">
-            <td>{{data.belopp}}</td>
-            <td>{{data.beskrivning}}</td>
-            <td>{{data.sign}}</td>
-            <td>{{data.points}}</td>
-    </table>
+    <div class ="col-md-2">
+<canvas id="bar" class="chart chart-bar"
+chart-data="kostnadvalue" chart-labels="kostnadLabel" chart-series="series2"></canvas>
+    </div>
+</div>
+<div class="col-md-12">
+	<div class = "col-md-7" style="border: 1px solid">
+		<h2> Inkomster</h2>
+		<input type="text"  placeholder= "filter" class =  "form-control input-normal" ng-model=inkomstfilter >
+		<table class= "table table-condensed">
+			<tr>
+				<th ng-click="sortTypeInkomst = 'id'; sortTypeInkomstReverse = !sortTypeInkomstReverse">ID</th>
+				<th ng-click="sortTypeInkomst = 'beskrivning'; sortTypeInkomstReverse = !sortTypeInkomstReverse">Beskrivning</th>
+				<th ng-click="sortTypeInkomst = 'kategori'; sortTypeInkomstReverse = !sortTypeInkomstReverse">Kategori</th>
+				<th ng-click="sortTypeInkomst = 'antal'; sortTypeInkomstReverse = !sortTypeInkomstReverse">Antal</th>
+				<th ng-click="sortTypeInkomst = 'belopp'; sortTypeInkomstReverse = !sortTypeInkomstReverse">Belopp</th>
+                <th ng-click="sortTypeInkomst = 'belopp'; sortTypeInkomstReverse = !sortTypeInkomstReverse">Kostnad %</th>
+			</tr>
+			<tr ng-repeat="data in inkomster | orderBy:sortTypeInkomst:sortTypeInkomstReverse | filter:inkomstfilter">
+				<td>
+				<input type="text"   ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.id >
+				</td>
+				<td>
+				<input type="text"  placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.beskrivning >
+				</td>
+				<td>
+				<input type="text" ng-change="getInkomstKategori(); getDataSourceInkomst()"  placeholder= "kategori" class =  "form-control input-normal" ng-model=data.kategori >
+				</td>
+				<td>
+				<input type="number" ng-change="getInkomstKategori(); getDataSourceInkomst()"  class =  "form-control" ng-model=data.antal >
+				</td>
+                <td>
+                <input type="number" ng-change="getInkomstKategori(); getDataSourceInkomst()"  class =  "form-control" ng-model=data.belopp >
+                </td>
+				<td>
+				<input type="number" ng-change="getInkomstKategori(); getDataSourceInkomst()"  class =  "form-control" ng-model=data.kostnad >
+				</td>
+
+				<td>
+				<button class="btn btn-danger" ng-click="RemoveInkomst(data)" >
+					Ta bort
+				</button></td>
+		</table>
+
+		<button class="btn btn-success" ng-click="addInkomst()" >
+			Lägg till
+		</button>
+        Total: {{getTotalInkomst()}}
+
+	</div>
+
+    <div class = "col-md-3" style="border: 1px solid">
+        <h2 ng-click="expandInkomstKategori = !expandInkomstKategori">Inkomster på kategori</h2>
+        <table class= "table table-condensed">
+            <tr>
+                <th>ID</th>
+                <th>Beskrivning</th>
+            </tr>
+            <tr ng-repeat-start="data in inkomsterKategori ">
+                <td>
+                <input type="text"  ng-disabled="true" placeholder= "id" class =  "form-control input-normal" ng-model=data.kategori >
+                </td>
+                <td>
+                <input type="text"   ng-disabled="true" placeholder= "beskrivning" class =  "form-control input-normal" ng-model=data.belopp >
+                </td>
+            </tr>
+            <th ng-show="expandInkomstKategori">Beskrivning</th>
+            <th ng-show="expandInkomstKategori">Total Belopp</th>
+            <tr ng-show="expandInkomstKategori" ng-repeat="datain in inkomster | orderBy:sortType:sortReverse | filter:{kategori: data.kategori}:true">
+                <td> {{datain.beskrivning}} </td>
+                <td> {{calcTotal(datain)}} </td>
+            <tr ng-repeat-end=""></tr>
+        </table>
+    </div>
+    <div class ="col-md-2">
+<canvas id="bar" class="chart chart-bar"
+chart-data="inkomstvalue" chart-labels="inkomstLabel" chart-series="series2"></canvas>
+    </div>
+
 </div>
 
 
-<div class = "col-md-4">
-    <table class= "table table-condensed">
-        <tr>
-            <th>Spelare</th>
-            <th>Rätt resultat</th>
-            <th>Rätt tecken</th>
-            <th>Poäng</th>
-        </tr>
-        <tr ng-repeat="data in inkomster | orderBy:'-points'">
-            <td>{{data.belopp}}</td>
-            <td>{{data.beskrivning}}</td>
-            <td>{{data.sign}}</td>
-            <td>{{data.points}}</td>
-    </table>
-</div>
+
+
