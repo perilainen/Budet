@@ -1,0 +1,20 @@
+<table class= "table table-condensed">
+			<tr>
+				<th class="col-md-1" ng-click="sortType = 'id'; sortReverse = !sortReverse">ID</th>
+				<th class="col-md-1" ng-click="sortType = 'id'; sortReverse = !sortReverse">Namn</th>
+				
+                
+			</tr>
+			<tr ng-repeat="data in userBudgets">
+			<td>
+				<label ng-click="loadToBudget(data)">{{data.Objectid}}</label>
+				</td>
+
+				<td>
+				<label ng-click="loadToBudget(data)">{{data.name}}</label>
+				</td>
+
+				<td>
+				<button ng-click="deleteBudget(data)" >Ta bort</button>
+				</td>
+				</tr>

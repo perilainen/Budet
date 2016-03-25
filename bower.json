@@ -11,7 +11,12 @@
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
     "html5-boilerplate": "~5.2.0",
-    "bootstrap":"3.3.6",
-    "alasql":"0.2.4"
+    "bootstrap": "3.3.6",
+    "alasql": "0.2.4",
+    "ngstorage": "0.3.10",
+    "fusioncharts": "3.10.1",
+    "angular-chartjs": "0.8.8",
+    "angular-chart": "^0.3.2",
+    "ngDialog":"0.5.9"
   }
 }

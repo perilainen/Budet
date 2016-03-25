@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'ngStorage','ng-fusioncharts','chart.js'])
+angular.module('myApp.view1', ['ngRoute', 'ngStorage','ng-fusioncharts','chart.js','ngDialog'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view1', {
@@ -9,7 +9,7 @@ angular.module('myApp.view1', ['ngRoute', 'ngStorage','ng-fusioncharts','chart.j
   });
 }])
 
-.controller('View1Ctrl',  function($scope, $localStorage) {
+.controller('View1Ctrl',  function($scope, $localStorage,ngDialog,$http) {
 
 
 
@@ -76,6 +76,89 @@ $scope.utgifter =
     return objekt.antal*objekt.belopp;
   }
 
+  $scope.createBudgetJson = function(){
+    var obj = {
+      "name":$scope.budgetNamn,
+      "utgifter": $scope.utgifter,
+              "inkomster": $scope.inkomster,
+              "investeringar": $scope.investeringar
+
+  };
+console.log(obj);
+  $http({
+    method: 'PUT',
+    url: '/api/saveBudget?user='+$scope.loggedInUser,//+'&jsonstring='+angular.toJson(obj),
+    data:angular.toJson(obj),
+    headers: {'Content-Type': 'application/json'}
+  })
+  }
+$scope.userBudgets = [];
+  $scope.loadBudgets = function(){
+     $http({
+      method: 'GET',
+      url: '/api/budgets/'+$scope.loggedInUser
+    }).then (function succesCallback(response){
+
+      console.log(response.data)
+
+      $scope.userBudgets = response.data;
+    
+    });
+
+     console.log($scope.userBudgets)
+    }
+
+  $scope.checkBudgetsExist = function(){
+    if ($scope.userBudgets.length>0){
+      return false
+    }
+    else{
+      return true
+    }
+  }    
+    
+  $scope.loadBudgetJson = function(){
+    console.log("LAddar budget");
+    ngDialog.open({template: 'view1/loadBudget.html', className: 'ngdialog-theme-default',
+                  scope:$scope})
+
+  };
+  $scope.budgetNamn = "";
+  
+  $scope.deleteBudget = function(data){
+    $http({
+      method: 'DELETE',
+      url: '/api/deleteBudget?user='+$scope.loggedInUser+'&objectid='+data.Objectid
+    })
+    $scope.loadBudgets();
+  }
+
+  $scope.loadToBudget = function(data){
+
+    $http({
+      method: 'GET',
+      url: '/api/getBudget?user='+$scope.loggedInUser+'&budget='+data.Objectid
+    }).then (function succesCallback(response){
+      $scope.utgifter = response.data.utgifter;
+    $scope.inkomster = response.data.inkomster;
+    $scope.investeringar = response.data.investeringar;
+    $scope.objectId = data.Objectid;
+    console.log($scope.utgifter)
+    console.log($scope.inkomster)
+    console.log($scope.investeringar)
+    })
+    
+  }
+  
+  $scope.logIn = function(){
+    ngDialog.open({template: 'view1/login.html', className: 'ngdialog-theme-default',
+                  scope:$scope})
+  }
+  $scope.login = function(){
+    console.log("test")
+    $scope.loggedInUser = this.text;
+    $scope.loadBudgets();
+  }
   
   $scope.calcPerYear = function(object){
     return object.belopp/object.years;

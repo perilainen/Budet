@@ -1,3 +1,17 @@
+<input type="text" placeholder="name" ng-model=budgetNamn>
+
+<button class="btn btn-success" ng-click="createBudgetJson()" >
+            Spara Budget
+        </button>
+
+        <button class="btn btn-success" ng-disabled = "checkBudgetsExist()" ng-click="loadBudgetJson()" >
+            Ladda Budget
+        </button>
+
+        <button class="btn btn-success" ng-click="logIn()" >
+            logIn
+        </button>
+        {{loggedInUser}}
 
 <div class="col-md-13">
 	<div class = "col-md-12" style="border: 1px solid">
